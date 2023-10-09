@@ -1,0 +1,26 @@
+﻿@model IEnumerable<Movie>
+
+<h1>Movies</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Release Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+           
+            <tr>
+                <td>@Html.ActionLink(movie.Name,"Details", new {id = movie.Id})</td>
+                <td>@movie.ReleaseDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+

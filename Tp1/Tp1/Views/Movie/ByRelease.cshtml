@@ -1,0 +1,27 @@
+﻿@model IEnumerable<Movie>
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+<h1>Movies By Release Date</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Release Date</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var movie in Model)
+        {
+            <tr>
+                <td>@movie.Name</td>
+                <td>@movie.ReleaseDate.ToShortDateString()</td>
+            </tr>
+        }
+    </tbody>
+</table>
