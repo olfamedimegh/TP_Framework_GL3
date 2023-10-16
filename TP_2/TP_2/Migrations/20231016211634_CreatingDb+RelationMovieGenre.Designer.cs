@@ -12,8 +12,8 @@ using TP_2.Models;
 namespace TP_2.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231015214535_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20231016211634_CreatingDb+RelationMovieGenre")]
+    partial class CreatingDbRelationMovieGenre
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,13 +25,14 @@ namespace TP_2.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("TP2.Models.Genre", b =>
+            modelBuilder.Entity("TP_2.Models.Genre", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
+                        .IsConcurrencyToken()
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -40,20 +41,43 @@ namespace TP_2.Migrations
                     b.ToTable("genres");
                 });
 
-            modelBuilder.Entity("TP2.Models.Movie", b =>
+            modelBuilder.Entity("TP_2.Models.Movie", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("uniqueidentifier");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<Guid?>("GenreId")
+                        .IsRequired()
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                        .IsConcurrencyToken()
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GenreId");
+
+                    b.HasIndex("Name");
+
                     b.ToTable("movies");
+                });
+
+            modelBuilder.Entity("TP_2.Models.Movie", b =>
+                {
+                    b.HasOne("TP_2.Models.Genre", "Genre")
+                        .WithMany("Movies")
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("TP_2.Models.Genre", b =>
+                {
+                    b.Navigation("Movies");
                 });
 #pragma warning restore 612, 618
         }

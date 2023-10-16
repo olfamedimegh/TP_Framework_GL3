@@ -30,7 +30,9 @@ namespace TP2.Controllers
             }
             return View(movie);
         }
-        public IActionResult Edit(int id)
+
+
+        public IActionResult Edit(Guid id)
         {
             // Récupérez le film à partir de la base de données en utilisant l'ID
             var movie = _db.movies.Find(id);
