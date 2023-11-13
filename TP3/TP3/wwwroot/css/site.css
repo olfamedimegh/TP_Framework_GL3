@@ -16,3 +16,40 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.form-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: row;
+}
+
+.control-label {
+    font-weight: bold;
+    margin-right: 10px;
+    flex: 1; /* Takes 1/3 of the space, adjust as needed */
+}
+
+.form-control {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    flex: 2; /* Takes 2/3 of the space, adjust as needed */
+}
+
+.btn-primary {
+    background-color: royalblue;
+    color: white;
+}
+
+.btn-secondary {
+    background-color: green;
+    color: #fff;
+}
+
+.text-danger {
+    color: #dc3545;
+}
+
+.text-red {
+    color: #dc3545;
+}

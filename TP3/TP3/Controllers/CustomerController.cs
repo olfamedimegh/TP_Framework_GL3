@@ -49,6 +49,11 @@ namespace TP3.Controllers
             _db.SaveChanges();
             return RedirectToAction("Index");
         }
-       
+        public IActionResult Edit(Guid id) {
+            return View();
+
+        }
+
+
     }
 }

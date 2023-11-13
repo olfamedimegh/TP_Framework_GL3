@@ -12,16 +12,29 @@
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Genre" class="control-label">Genre</label>
-                <select asp-for="Name" class ="form-control" asp-items="@ViewBag.member"></select>
-                <span asp-validation-for="Genre" class="text-red"></span>
 
+            <div class="form-group">
+                <label asp-for="GenreId" class="control-label">Genre</label>
+                <select asp-for="GenreId" class="form-control" asp-items="ViewBag.member"></select>
+                <span asp-validation-for="GenreId" class="text-red"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label">Movie Added</label>
+                <input asp-for="CreatedDate" type="date" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Image" class="control-label">Image</label>
+                <input asp-for="Image" type="file" class="form-control" ></input>
+                <span asp-validation-for="Image" class="text-red"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
