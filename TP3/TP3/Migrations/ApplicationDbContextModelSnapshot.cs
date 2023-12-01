@@ -64,7 +64,6 @@ namespace TP3.Migrations
 
                     b.Property<string>("Name")
                         .IsConcurrencyToken()
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
@@ -122,7 +121,6 @@ namespace TP3.Migrations
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Image")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")

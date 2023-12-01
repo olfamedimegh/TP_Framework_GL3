@@ -23,7 +23,7 @@ namespace TP3.Models
 
             // Add the records to the Genre table
             modelBuilder.Entity<Genre>().HasData(genres);
-
+/*
             // Configuration de la relation Movie-Genre
             modelBuilder.Entity<Movie>()
                 .HasOne(m => m.Genre)
@@ -35,7 +35,7 @@ namespace TP3.Models
             modelBuilder.Entity<Customer>()
                 .HasOne(m => m.Membershiptype)
                 .WithMany(g => g.Customers)
-                .HasForeignKey(m => m.MembershiptypeId);
+                .HasForeignKey(m => m.MembershiptypeId);*/
         }
 
        

@@ -1,7 +1,17 @@
+using Microsoft.EntityFrameworkCore;
+using TP4.Models;
+using TP4.Services.ServiceContracts;
+using TP4.Services.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();
 

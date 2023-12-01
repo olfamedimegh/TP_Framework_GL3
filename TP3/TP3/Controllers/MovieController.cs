@@ -45,7 +45,19 @@ namespace TP3.Controllers
             .SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
             return View();
             }
-            
+
+            if (movie.ImageFile != null && movie.ImageFile.Length > 0)
+            {
+                // Enregistrez le fichier image sur le serveur
+                var imagePath = Path.Combine("wwwroot/images", movie.ImageFile.FileName);
+                using (var stream = new FileStream(imagePath, FileMode.Create))
+                {
+                    movie.ImageFile.CopyTo(stream);
+                }
+
+                // Enregistrez le chemin de l'image dans la base de données
+                movie.Image = $"/images/{movie.ImageFile.FileName}";
+            }
             // Validez les données du formulaire et ajoutez le nouveau film à la base de données
             _db.movies.Add(movie);
             _db.SaveChanges();
@@ -80,42 +92,34 @@ namespace TP3.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingMovie = _db.movies.Find(id);
                 try
                 {
                     // Retrieve the existing movie from the database
 
-                    if (existingMovie == null)
+                    if (movie == null)
                     {
                         return NotFound();
                     }
 
-                    // Update the properties of the existing movie
-                    existingMovie.Name = movie.Name;
-                    existingMovie.GenreId = movie.GenreId;
-                    existingMovie.CreatedDate = movie.CreatedDate;
-
-
-                    // Check if a new image file is provided
-                    if (movie.Image != null)
+                    if (movie.ImageFile != null && movie.ImageFile.Length > 0)
                     {
-                        existingMovie.Image = movie.Image;
+                        // Enregistrez le fichier image sur le serveur
+                        var imagePath = Path.Combine("wwwroot/images", movie.ImageFile.FileName);
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            movie.ImageFile.CopyTo(stream);
+                        }
+
+                        // Enregistrez le chemin de l'image dans la base de données
+                        movie.Image = $"/images/{movie.ImageFile.FileName}";
                     }
-                    _db.Update(existingMovie);
+                    _db.Entry(movie).State = EntityState.Modified;
                     _db.SaveChanges();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (existingMovie == null)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
                         throw;
-                    }
                 }
-
                 return RedirectToAction(nameof(Index));
             }
 
@@ -152,7 +156,16 @@ namespace TP3.Controllers
             {
                 return NotFound();
             }
+            // Delete the image file from the /images folder
+            if (!string.IsNullOrEmpty(movie.Image))
+            {
+                var imagePath = Path.Combine("wwwroot", movie.Image.TrimStart('/'));
 
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
             _db.movies.Remove(movie);
             _db.SaveChanges();
 

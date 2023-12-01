@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using TP3.Models;
 
-namespace TP_2.Controllers
+namespace TP3.Controllers
 
 {
     public class GenreController : Controller

@@ -1,0 +1,53 @@
+﻿@model TP4.Models.Movie
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>Movie</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="GenreId" class="control-label">Genre</label>
+                <select asp-for="GenreId" class="form-control" asp-items="ViewBag.member"></select>
+                <span asp-validation-for="GenreId" class="text-red"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="CreatedDate" class="control-label">Movie Added</label>
+                <input asp-for="CreatedDate" type="date" class="form-control" />
+                <span asp-validation-for="CreatedDate" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="Image" class="control-label">Image</label>
+                <input asp-for="Image" type="file" class="form-control" />
+                <span asp-validation-for="Image" class="text-red"></span>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save Changes</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <button onclick="location.href='@Url.Action("Index")'" class="btn btn-secondary">Back to List</button>
+
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

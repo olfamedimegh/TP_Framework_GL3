@@ -7,8 +7,8 @@ namespace TP3.Models
         public Guid Id { get; set; }
 
         [ConcurrencyCheck]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public List<Movie> Movies { get; set; }
+        public List<Movie>? Movies { get; set; }
     }
 }

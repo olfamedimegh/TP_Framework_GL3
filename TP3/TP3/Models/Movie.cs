@@ -15,6 +15,9 @@ namespace TP3.Models
         public List<Customer>? Customers { get; set; }
 
         public string? Image { get; set; }
+        
+        [NotMapped]
+        public IFormFile? ImageFile { get; set; }
 
         public DateTime? CreatedDate { get; set; }
 
