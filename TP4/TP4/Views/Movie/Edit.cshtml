@@ -4,50 +4,56 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<div class="container mt-4">
+    <h1 class="display-4">Edit Movie</h1>
 
-<h4>Movie</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Movie Details</h4>
+            <hr />
 
-            <div class="form-group">
-                <label asp-for="GenreId" class="control-label">Genre</label>
-                <select asp-for="GenreId" class="form-control" asp-items="ViewBag.member"></select>
-                <span asp-validation-for="GenreId" class="text-red"></span>
-            </div>
+            <form asp-action="Edit" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-            <div class="form-group">
-                <label asp-for="CreatedDate" class="control-label">Movie Added</label>
-                <input asp-for="CreatedDate" type="date" class="form-control" />
-                <span asp-validation-for="CreatedDate" class="text-danger"></span>
-            </div>
+                <input type="hidden" asp-for="Id" />
 
-            <div class="form-group">
-                <label asp-for="ImageFile" class="control-label"></label>
-                <input asp-for="ImageFile" type="file" class="form-control" />
-                <span asp-validation-for="ImageFile" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary">Save Changes</button>
-            </div>
-        </form>
+                <div class="mb-3">
+                    <label asp-for="Name" class="form-label">Movie Name</label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="GenreId" class="form-label">Genre</label>
+                    <select asp-for="GenreId" class="form-select" asp-items="ViewBag.member">
+                        <option value="">Select Genre</option>
+                    </select>
+                    <span asp-validation-for="GenreId" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="CreatedDate" class="form-label">Movie Added</label>
+                    <input asp-for="CreatedDate" type="date" class="form-control" />
+                    <span asp-validation-for="CreatedDate" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="ImageFile" class="form-label">Movie Image</label>
+                    <input asp-for="ImageFile" type="file" class="form-control" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>
+
+                <div class="mb-3">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <a asp-action="Index" class="btn btn-secondary">Back to List</a>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 
-<div>
-    <button onclick="location.href='@Url.Action("Index")'" class="btn btn-secondary">Back to List</button>
-
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
