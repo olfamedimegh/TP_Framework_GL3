@@ -2,21 +2,23 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TP4.Models;
+using TP4.Services.ServiceContracts;
 
 namespace TP4.Controllers
 {
     public class MovieController : Controller
     {
         private readonly ApplicationDbContext _db;
-        public MovieController(ApplicationDbContext db)
+        private readonly IMovieService _movieService;
+        public MovieController(ApplicationDbContext db, IMovieService movieService)
         {
             _db = db;
+            _movieService = movieService;
         }
         
         public IActionResult Index()
         {
-            List<Movie> movies = _db.movies.ToList();
-            return View(movies);
+            return View(_movieService.GetAllMovies());
         }
         public IActionResult Create()
         {
@@ -45,10 +47,8 @@ namespace TP4.Controllers
             .SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
             return View();
             }
-            
-            // Validez les données du formulaire et ajoutez le nouveau film à la base de données
-            _db.movies.Add(movie);
-            _db.SaveChanges();
+
+            _movieService.CreateMovie(movie);
             return RedirectToAction("Index");
 
         }
@@ -57,7 +57,7 @@ namespace TP4.Controllers
         public IActionResult Edit(Guid id)
         {
             // Récupérez le film à partir de la base de données en utilisant l'ID
-            var movie = _db.movies.Find(id);
+            var movie = _movieService.GetMovieById(id);
 
             if (movie == null)
             {
@@ -80,42 +80,33 @@ namespace TP4.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existingMovie = _db.movies.Find(id);
                 try
                 {
                     // Retrieve the existing movie from the database
 
-                    if (existingMovie == null)
+                    if (movie == null)
                     {
                         return NotFound();
                     }
 
-                    // Update the properties of the existing movie
-                    existingMovie.Name = movie.Name;
-                    existingMovie.GenreId = movie.GenreId;
-                    existingMovie.CreatedDate = movie.CreatedDate;
-
-
-                    // Check if a new image file is provided
-                    if (movie.Image != null)
+                    if (movie.ImageFile != null && movie.ImageFile.Length > 0)
                     {
-                        existingMovie.Image = movie.Image;
+                        // Enregistrez le fichier image sur le serveur
+                        var imagePath = Path.Combine("wwwroot/images", movie.ImageFile.FileName);
+                        using (var stream = new FileStream(imagePath, FileMode.Create))
+                        {
+                            movie.ImageFile.CopyTo(stream);
+                        }
+
+                        // Enregistrez le chemin de l'image dans la base de données
+                        movie.Image = $"/images/{movie.ImageFile.FileName}";
                     }
-                    _db.Update(existingMovie);
-                    _db.SaveChanges();
+                    _movieService.Edit(movie);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (existingMovie == null)
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
                         throw;
-                    }
                 }
-
                 return RedirectToAction(nameof(Index));
             }
 
@@ -133,7 +124,7 @@ namespace TP4.Controllers
         //
         public IActionResult Delete(Guid id)
         {
-            var movie = _db.movies.Find(id);
+            var movie = _movieService.GetMovieById(id);
 
             if (movie == null)
             {
@@ -146,23 +137,30 @@ namespace TP4.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {
-            var movie = _db.movies.Find(id);
+            var movie = _movieService.GetMovieById(id);
 
             if (movie == null)
             {
                 return NotFound();
             }
+            // Delete the image file from the /images folder
+            if (!string.IsNullOrEmpty(movie.Image))
+            {
+                var imagePath = Path.Combine("wwwroot", movie.Image.TrimStart('/'));
 
-            _db.movies.Remove(movie);
-            _db.SaveChanges();
-
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+            _movieService.Delete(id);
             return RedirectToAction("Index"); // Redirect to the list after successful deletion
         }
 
         public IActionResult Details(Guid id)
         {
             // Récupérez le film à partir de la base de données en utilisant l'ID
-            var movie = _db.movies.Find(id);
+            var movie = _movieService.GetMovieById(id);
 
             if (movie == null)
             {
@@ -172,6 +170,26 @@ namespace TP4.Controllers
             return View(movie);
         }
 
+        //Partie LINQ du TP4
+
+        public IActionResult MoviesByGenre(Guid id)
+        {
+            var movies = _movieService.GetMoviesByGenre(id);
+            return View("MoviesByGenre", movies);
+        }
+
+
+        public IActionResult MoviesOrderedAscending()
+        {
+            var movies = _movieService.GetAllMoviesOrderedAscending();
+            return View("MoviesOrderedAscending", movies);
+        }
+
+        public IActionResult MoviesByUserDefinedGenre(string name)
+        {
+            var movies = _movieService.GetMoviesByUserDefinedGenre(name);
+            return View("MoviesByUserDefinedGenre", movies);
+        }
 
     }
 }

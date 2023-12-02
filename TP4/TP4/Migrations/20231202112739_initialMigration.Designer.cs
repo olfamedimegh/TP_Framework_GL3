@@ -12,7 +12,7 @@ using TP4.Models;
 namespace TP4.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20231130202606_initialMigration")]
+    [Migration("20231202112739_initialMigration")]
     partial class initialMigration
     {
         /// <inheritdoc />

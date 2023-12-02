@@ -1,10 +1,16 @@
 ﻿@model IEnumerable<TP4.Models.Movie>
 
+
+@*@{
+    Layout="~/Views/Shared/_Layout.cshtml";
+}*@
+
 @{
-    ViewData["Title"] = "View";
+    ViewBag.Title = "Index";
 }
 
-<h1>View</h1>
+
+<h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -18,7 +24,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Genre)
             </th>
-            <th></th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>
+                functions
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -30,7 +41,7 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Genre.Name)
             </td>
-                <td>
+            <td>
                     <img src="@item.Image" alt="Movie Img" style="width: 150px; height: 100px;">
                 </td>
             <td>

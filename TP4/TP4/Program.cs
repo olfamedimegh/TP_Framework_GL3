@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using TP4.Models;
+using TP4.Repositories;
 using TP4.Services.ServiceContracts;
 using TP4.Services.Services;
 
@@ -11,6 +12,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 
 var app = builder.Build();

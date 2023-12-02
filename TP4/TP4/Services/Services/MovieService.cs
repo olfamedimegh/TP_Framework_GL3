@@ -1,34 +1,56 @@
 ﻿using TP4.Models;
+using TP4.Repositories;
 using TP4.Services.ServiceContracts;
 
 namespace TP4.Services.Services
 {
     public class MovieService : IMovieService
     {
-        private readonly ApplicationDbContext _dbContext;
+        private readonly IMovieRepository _movieRepository;
 
-        public MovieService(ApplicationDbContext dbContext)
+        public MovieService(IMovieRepository movieRepository)
         {
-            _dbContext = dbContext;
+            _movieRepository = movieRepository;
         }
 
-        public List<Movie> GetAllMoviesByGenre(string genre)
+        public List<Movie> GetAllMovies()
         {
-            return _dbContext.movies
-                .Where(m => m.Genre.Equals(genre))
-                .ToList();
+            return _movieRepository.GetAllMovies();
         }
-        public List<Movie> GetAllMoviesOrderedByTitle()
+
+        public Movie GetMovieById(Guid id)
         {
-            return _dbContext.movies
-                .OrderBy(m => m.Name)
-                .ToList();
+            return _movieRepository.GetMovieById(id);
         }
-        public List<Movie> GetMoviesByGenreId(int genreId)
+
+        public void CreateMovie(Movie movie)
         {
-            return _dbContext.movies
-                .Where(m => m.GenreId.Equals(genreId))
-                .ToList();
+            _movieRepository.CreateMovie(movie);
+        }
+
+        public void Edit(Movie movie)
+        {
+            _movieRepository.EditMovie(movie);
+        }
+
+        public void Delete(Guid id)
+        {
+            _movieRepository.DeleteMovie(id);
+        }
+
+        public List<Movie> GetMoviesByGenre(Guid genreId)
+        {
+            return _movieRepository.GetMoviesByGenre(genreId);
+        }
+
+        public List<Movie> GetAllMoviesOrderedAscending()
+        {
+            return _movieRepository.GetAllMoviesOrderedAscending();
+        }
+
+        public List<Movie> GetMoviesByUserDefinedGenre(string userDefinedGenre)
+        {
+            return _movieRepository.GetMoviesByUserDefinedGenre(userDefinedGenre);
         }
     }
 }
